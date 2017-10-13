@@ -1,11 +1,27 @@
-h1 {
-    font-weight: 600;
-}
-
+/******HEADER DEFINITION******/
 .header {
-    font-style: underline;
+    font-family: 'Raleway', sans-serif;
 }
 
-img {
-    width: 200px;
+/******LINK DEFINITION*******/
+a:link {
+    color: #2658a8;
+    text-decoration: none;
+}
+a:visited {
+    color: #2658a8;
+}
+a:hover {
+    color: #4081e8;
+}
+
+/*******IMAGE DEFINITION******/
+.jumbotron {
+  background-image: url(images/austin.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-
+
+  color: white;
+  text-align: right;
 }
