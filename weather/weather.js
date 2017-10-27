@@ -37,7 +37,7 @@ let handleWeatherResponse = function(response) {
 
     let dailyForecast = "";
 
-    for(let i=0; i<=4; i++) {
+    for(let i=0; i<=5; i++) {
       dailyForecast += "<div class='col'>"
       dailyForecast += "<h3>" + icon(response.daily.data[i]) + "</i></h3>"
       dailyForecast += "<h4>" + Math.round(response.daily.data[i].temperatureHigh) + "|" + Math.round(response.daily.data[i].temperatureLow) + "</h4>"
