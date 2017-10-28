@@ -48,6 +48,9 @@ let handleWeatherResponse = function(response) {
     $(".forecast").append(dailyForecast);
     $(".forecast").fadeIn(2000);
 
+    $("#current-conditions-text").append(response.daily.summary);
+    $(".current").fadeIn(2000);
+
   // *** your code ends here - no, really.
 };
 
