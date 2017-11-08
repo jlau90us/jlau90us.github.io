@@ -39,7 +39,7 @@ let handleWeatherResponse = function(response) {
 
     for(let i=0; i<=5; i++) {
       dailyForecast += "<div class='col'>"
-      dailyForecast += "<h3>" + icon(response.daily.data[i]) + "</i></h3>"
+      dailyForecast += "<h3>" + icon(response.daily.data[i]) + "</h3>"
       dailyForecast += "<h4>" + Math.round(response.daily.data[i].temperatureHigh) + "|" + Math.round(response.daily.data[i].temperatureLow) + "</h4>"
       dailyForecast += "<h5>" + response.daily.data[i].summary + "</h5>"
       dailyForecast += "</div>"
