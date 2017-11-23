@@ -3,7 +3,9 @@ You're in charge of managing the development of the new TMDB mobile application.
 is almost here, and your developer quits! You can tell the board that you can't deliver the
 project, or you can finish it yourself. Luckily, you took an awesome introduction to software
 development course in b-school. You've got this.
+
 To-do:
+
 - When a movie title is entered into the text field, figure out how to capture the value that's
   typed in the state object.
 - When the return key is pressed, use the value that's typed by the user to call the TMDB API
@@ -11,9 +13,11 @@ To-do:
   component (already written, but hard-coded), and display the movie's poster, backdrop, title,
   rating (average vote) and overview. In addition, clear out the existing search term so that
   it reads "Enter a movie name!" instead of the movie you just searched for.
+
 Hints:
+
 - Read the React documentation on the TextInput component –
-  https://facebook.github.io/react-native/releases/0.28/docs/textinput.html – pay particular
+  https://facebook.github.io/react-native/releases/0.28/docs/textinput.html – pay particular
   attention to the onChangeText (event that occurs when typing into the TextInput) and also
   onSubmitEditing (event that occurs when the user presses the return key) - write event handler
   functions for both!
@@ -22,28 +26,24 @@ Hints:
 */
 
 import React from 'react';
-import { Image, TextInput, Text, View, StyleSheet } from 'react-native';
-import styles from './styles';
+import { Button, Image, TextInput, Text, View, StyleSheet } from 'react-native';
 
 class Movie extends React.Component {
   render() {
     return (
       <View style={styles.movie}>
         <Image style={styles.backdrop}
-               source={{uri: "http://image.tmdb.org/t/p/w500/sy3e2e4JwdAtd2oZGA2uUilZe8j.jpg"}} />
+               source={{uri: "http://image.tmdb.org/t/p/w500" + this.props.backdrop}} />
         <View style={styles.posterContainer}>
           <Image style={styles.poster}
-                 source={{uri: "http://image.tmdb.org/t/p/w500/5aGhaIHYuQbqlHWvWYqMCnj40y2.jpg"}} />
+                 source={{uri: "http://image.tmdb.org/t/p/w500" + this.props.poster}} />
         </View>
         <View style={styles.titleAndVotes}>
-          <Text style={styles.title}>The Martian</Text>
-          <Text style={styles.votes}>7.6</Text>
+          <Text style={styles.title}>{this.props.title}</Text>
+          <Text style={styles.votes}>{this.props.votes}</Text>
         </View>
         <Text style={styles.overview}>
-          During a manned mission to Mars, Astronaut Mark Watney is presumed dead after a fierce
-          storm and left behind by his crew. But Watney has survived and finds himself stranded
-          and alone on the hostile planet. With only meager supplies, he must draw upon his ingenuity,
-          wit and spirit to subsist and find a way to signal to Earth that he is alive.
+          {this.props.overview}
         </Text>
       </View>
     );
@@ -51,28 +51,75 @@ class Movie extends React.Component {
 }
 
 export default class App extends React.Component {
-  constructor() {
-    super();
+  constructor(text) {
+    super(text);
+
+//sets the initial states
     this.state = {
-      movieNameInput: "",
-      movie: null
-    }
+      movieNameInput: '',
+      movie: null,
+      backdrop: null,
+      poster: null,
+      votes: null,
+      overview: null,
+    };
   }
+
+  movieNameInputChanged(text) {
+    this.setState({
+      movieNameInput: text,
+    });
+    //console.debug('',this.state.movieNameInput)
+  }
+
   movieNameInputSubmitted() {
     // Make the TMDB API call, receive results. Leave the next two lines alone.
     let url = "http://api.themoviedb.org/3/search/movie?query=" + this.state.movieNameInput + "&api_key=8ad43d355fccbef40dc3527123bb25ff&language=en-US&page=1&include_adult=false";
     fetch(url).then(response => response.json()).then(json => {
-      console.log(json);
+
+      // console.log(json.results[0].original_title);
+      // console.log(json.results[0].backdrop_path);
+      // console.log(json.results[0].poster_path);
+      // console.log(json.results[0].vote_average);
+      // console.log(json.results[0].overview);
+
+      //stores API results into movie states
+      this.setState({
+        movie: json.results[0].original_title,
+        backdrop: json.results[0].backdrop_path,
+        poster: json.results[0].poster_path,
+        votes: json.results[0].vote_average,
+        overview: json.results[0].overview,
+        movieNameInput: ""
+      });
+      //console.debug(this.state.movieNameInput)
     });
   }
+
   render() {
     return (
       <View style={styles.container}>
         <TextInput style={styles.movieNameInput}
                    placeholder="Enter a movie name!"
-                   placeholderTextColor="#aaa" />
+                   placeholderTextColor="#aaa"
+                   onChangeText={(text) => this.movieNameInputChanged(text)}
+                   onSubmitEditing={() => this.movieNameInputSubmitted()}
+                   value={this.state.movieNameInput}
+                   />
+
         {/*Conditionally show the Movie component, only if there's a movie in state (so not initially)*/}
-        {this.state.movie && <Movie />}
+        {this.state.movie &&
+
+//Passes states to the Movie component
+        <Movie
+          title={this.state.movie}
+          backdrop={this.state.backdrop}
+          poster={this.state.poster}
+          votes={this.state.votes}
+          overview={this.state.overview}
+        />
+        }
+
       </View>
     );
   }
